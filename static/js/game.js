@@ -5,6 +5,8 @@ var bullets = [];
 var EXPL = 4;
 var points = 0;
 var shaking = 0;
+var shipLeft = new Image();
+var shipRight = new Image();
 
 function startGame(){
     console.log("Game Begins Now!");
@@ -12,6 +14,8 @@ function startGame(){
     canvas.setAttribute("tabIndex",0);
     setInterval(repaint,30);
     setInterval(update,30);
+    shipLeft.src="static/images/ship_loop_left.gif";
+    shipRight.src="static/images/ship_loop.gif";
     
 }
 function repaint(){
@@ -35,7 +39,8 @@ function repaint(){
     // draw the enemies
     ctx.fillStyle = "#FF0000";
     for (var i = spaceships.length - 1; i >= 0; i--) {
-        ctx.fillRect(spaceships[i][0],spaceships[i][1],40,40);
+        // ctx.fillRect(spaceships[i][0],spaceships[i][1],40,40);
+        ctx.drawImage(shipLeft,spaceships[i][0],spaceships[i][1],40,40);
     }
 
     // draw the bullets
