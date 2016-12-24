@@ -2,19 +2,20 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Title of the document</title>
+<title>game0</title>
 <!-- Latest compiled and minified Bootstrap CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 
 <body>
   <div class="container">
-    <div class="row">
-      <button class="btn btn-default" onclick="sayHello();">Chris</button>
+    <!-- <div class="row">
+      <button class="btn btn-default" onclick="repaint();">Chris</button>
       <div id="a123"></div>
-    </div>
+    </div> -->
     <div class="row">
-      <svg width="960" height="500"></svg>
+      <canvas id="can" width="960" height="500" onmousemove="mouseMoved(event)" onkeydown="keyPress(event)">
+      </canvas>
     </div>
 
   </div>
@@ -22,20 +23,12 @@
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="static/js/game.js"></script>
 <script>
   console.log("Hello World!");
-  function sayHello() {
-    console.log("Hello");
-    var params={
-      "name":"Maximilian Robespierre"
-    }
-    $.get('/name', params, function(the_name) {
-      console.log(the_name);
-      var textarea=$("#a123");
-      textarea.text(the_name);
-    });
-  }
+  startGame();
 </script>
+
 </body>
 
 </html>
