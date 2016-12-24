@@ -35,5 +35,20 @@ def name():
     print uname
     return "Sir " + uname
 
+@app.route('/game0')
+def game():
+    return render_template('game0.html')
+
+@app.route('/newsfeed')
+def feed_news():
+    names = [
+        "chris",
+        "matt",
+        "jamie",
+        "max"
+    ]
+    return render_template('newsfeed.html', names=names)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
