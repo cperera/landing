@@ -14,8 +14,8 @@ function startGame(){
     canvas.setAttribute("tabIndex",0);
     setInterval(repaint,30);
     setInterval(update,30);
-    shipLeft.src="static/images/ship_loop_left.gif";
-    shipRight.src="static/images/ship_loop.gif";
+    shipLeft.src="static/images/ship_left.png";
+    shipRight.src="static/images/ship_right.png";
     
 }
 function repaint(){
@@ -39,8 +39,13 @@ function repaint(){
     // draw the enemies
     ctx.fillStyle = "#FF0000";
     for (var i = spaceships.length - 1; i >= 0; i--) {
-        // ctx.fillRect(spaceships[i][0],spaceships[i][1],40,40);
-        ctx.drawImage(shipLeft,spaceships[i][0],spaceships[i][1],40,40);
+        //ctx.fillRect(spaceships[i][0],spaceships[i][1],40,40);
+        if (spaceships[i][2]>0){
+            ctx.drawImage(shipRight,spaceships[i][0]-5,spaceships[i][1]-10,60,60);
+        }
+        else{
+            ctx.drawImage(shipLeft,spaceships[i][0]-5,spaceships[i][1]-10,60,60);
+        }
     }
 
     // draw the bullets
