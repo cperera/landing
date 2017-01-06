@@ -3,6 +3,8 @@ var last_mouse_y = 0;
 var spaceships = [];
 var bullets = [];
 var EXPL = 4;
+
+var ammo = 10;
 var points = 0;
 var shaking = 0;
 var shipLeft = new Image();
@@ -64,7 +66,7 @@ function repaint(){
 
     // draw the hero
     ctx.fillStyle = "#0000FF";
-    ctx.fillRect(last_mouse_x - 60,last_mouse_y - 10,20,20);
+    ctx.fillRect(last_mouse_x - 10,last_mouse_y - 10,20,20);
 
     // unshake
     ctx.translate(canvas.width/2,canvas.height/2);
@@ -77,7 +79,7 @@ function repaint(){
     ctx.fillStyle = "white";
     ctx.font="28px serif";
     ctx.fillText("# of Spaceships: " + spaceships.length, 10,30);
-    ctx.fillText("# of Bullets: " + bullets.length, 10,60);
+    ctx.fillText("Ammo: " + ammo, 10,60);
     ctx.fillText("Score: " + points, 10,90);
 
 }
@@ -149,7 +151,12 @@ function mouseMoved(event){
 }
 function keyPress(event){
     if (event.code === "Space"){
-        console.log('SPAAACE')
-        bullets.push([last_mouse_x - 50, last_mouse_y -10, 0, -4]);
+        // console.log('SPAAACE')
+        if (ammo >= 1){
+            bullets.push([last_mouse_x-5, last_mouse_y -10, 0, -4]);
+            ammo -= 1;
+        }else {
+            console.log("Out of ammo.")
+        }
     }
 }
