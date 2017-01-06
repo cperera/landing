@@ -21,6 +21,14 @@ function startGame(){
 function repaint(){
     var canvas=document.getElementById("can");
     var ctx= canvas.getContext("2d");
+
+    // flash white on ship explosion
+    if (shaking >= .85){
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        console.log("Flash!");
+        return
+    }
     
     // shake
     var translation_x = (Math.random()*50 - 25)*shaking;
@@ -70,6 +78,7 @@ function repaint(){
     ctx.font="28px serif";
     ctx.fillText("# of Spaceships: " + spaceships.length, 10,30);
     ctx.fillText("# of Bullets: " + bullets.length, 10,60);
+    ctx.fillText("Score: " + points, 10,90);
 
 }
 function update(){
@@ -127,6 +136,7 @@ function update(){
                 }
                 spaceships.splice(j,1);
                 bullets.splice(i,1);
+                points += 10
                 shaking = 1.0
                 break;
             }
@@ -139,7 +149,7 @@ function mouseMoved(event){
 }
 function keyPress(event){
     if (event.code === "Space"){
-        console.log('SPAAAACE')
+        console.log('SPAAACE')
         bullets.push([last_mouse_x - 50, last_mouse_y -10, 0, -4]);
     }
 }
