@@ -9,6 +9,7 @@ var points = 0;
 var shaking = 0;
 var shipLeft = new Image();
 var shipRight = new Image();
+var shipUp = new Image();
 
 function startGame(){
     console.log("Game Begins Now!");
@@ -18,7 +19,7 @@ function startGame(){
     setInterval(update,30);
     shipLeft.src="static/images/ship_left.png";
     shipRight.src="static/images/ship_right.png";
-    
+    shipUp.src="static/images/ship_up_red.png";
 }
 function repaint(){
     var canvas=document.getElementById("can");
@@ -31,12 +32,12 @@ function repaint(){
         console.log("Flash!");
         return
     }
-    
+
     // shake
     var translation_x = (Math.random()*50 - 25)*shaking;
     var translation_y = (Math.random()*50 - 25)*shaking;
     ctx.translate(translation_x,translation_y);
-    
+
     var rotation_ang = (Math.random()*Math.PI/4 - Math.PI/8)*shaking*0.5;
     ctx.translate(canvas.width/2,canvas.height/2);
     ctx.rotate(rotation_ang);
@@ -45,7 +46,7 @@ function repaint(){
     // clear the sceen
     ctx.fillStyle = "#000000";
     ctx.fillRect(0,0,canvas.width,canvas.height);
-    
+
     // draw the enemies
     ctx.fillStyle = "#FF0000";
     for (var i = spaceships.length - 1; i >= 0; i--) {
@@ -66,13 +67,14 @@ function repaint(){
 
     // draw the hero
     ctx.fillStyle = "#0000FF";
-    ctx.fillRect(last_mouse_x - 10,last_mouse_y - 10,20,20);
+    // ctx.fillRect(last_mouse_x - 10,last_mouse_y - 10,20,20);
+    ctx.drawImage(shipUp, last_mouse_x - 30,last_mouse_y - 10, 60, 60);
 
     // unshake
     ctx.translate(canvas.width/2,canvas.height/2);
     ctx.rotate(-rotation_ang);
     ctx.translate(-canvas.width/2,-canvas.height/2);
-    
+
     ctx.translate(-translation_x,-translation_y);
 
     // keep score
@@ -91,7 +93,7 @@ function update(){
     for (var i = spaceships.length - 1; i >= 0; i--) {
         spaceships[i][0] += spaceships[i][2];
         if (spaceships[i][0] > 1000){
-            spaceships.splice(i,1); 
+            spaceships.splice(i,1);
         }
         else if (spaceships[i][0] < -80){
             spaceships.splice(i,1);
@@ -117,17 +119,17 @@ function update(){
             bullets[i][1] > 600 ||
             bullets[i][0] < 0 ||
             bullets[i][0] > 1000) {
-            bullets.splice(i,1); 
+            bullets.splice(i,1);
             continue;
         }
         // check for collision with ships
         for (var j = spaceships.length - 1; j >= 0; j--) {
-            if (bullets[i][0]+10  > spaceships[j][0] && 
-                bullets[i][0] < spaceships[j][0]+40 && 
+            if (bullets[i][0]+10  > spaceships[j][0] &&
+                bullets[i][0] < spaceships[j][0]+40 &&
                 bullets[i][1]+10 > spaceships[j][1] &&
-                bullets[i][1] < spaceships[j][1]+40) 
+                bullets[i][1] < spaceships[j][1]+40)
             {
-                
+
                 for (var i = 0; i < EXPL; i++) {
                     var angle=Math.random()*2*3.14159;
                     bullets.push([
