@@ -32,6 +32,7 @@ function startGame(){
     ammo = 10;
     ended = false;
     score = 0;
+    spaceships = [];
     
 }
 function repaint(){
@@ -172,6 +173,9 @@ function update(){
         {
             bullets.splice(i, 1);
             shaking = 1.0;
+            
+            // replace immediate endgame with a health bar?
+            endgame();
         }
     }
 
@@ -184,6 +188,9 @@ function update(){
         {
             spaceships.splice(j, 1);
             shaking = 1.0;
+
+            // replace immediate endgame with a health bar?
+            endgame();
         }
     }
 
@@ -246,8 +253,8 @@ function drawResetButton(mousedOver){
     var rectColor = "#555555";
     var textColor = "#FFFFFF";
     if (mousedOver){
-        rectColor = "red";
-        textColor = "blue";
+        rectColor = "#999999";
+        textColor = "#FFFFFF";
     }
 
     ctx.fillStyle = rectColor;
