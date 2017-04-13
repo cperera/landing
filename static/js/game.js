@@ -13,12 +13,15 @@ var shipUp = new Image();
 
 var drawCollisionRects = false;
 
+var updateInt;
+var repaintInt;
+
 function startGame(){
     console.log("Game Begins Now!");
     var canvas=document.getElementById("can");
     canvas.setAttribute("tabIndex",0);
-    setInterval(repaint,30);
-    setInterval(update,30);
+    repaintInt = setInterval(repaint,30);
+    updateInt = setInterval(update,30);
     shipLeft.src="static/images/ship_left.png";
     shipRight.src="static/images/ship_right.png";
     shipUp.src="static/images/ship_up_red.png";
@@ -137,7 +140,7 @@ function update(){
                 bullets[i][1]+10 > spaceships[j][1] &&
                 bullets[i][1] < spaceships[j][1]+40)
             {
-
+                // make ship explode with debris
                 for (var i = 0; i < EXPL; i++) {
                     var angle=Math.random()*2*3.14159;
                     bullets.push([
@@ -177,6 +180,22 @@ function update(){
         }
     }
 
+    if (bullets.length === 0 && ammo === 0){
+        endgame();
+    }
+}
+function endgame(){
+    clearInterval(updateInt);
+    clearInterval(repaintInt);
+    console.log("Game over!");
+    var canvas=document.getElementById("can");
+    var ctx= canvas.getContext("2d");
+
+    ctx.fillStyle = "#222222";
+    ctx.fillRect(canvas.width/2-50,canvas.height/2-20,100,60);
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font="28px serif";
+    ctx.fillText("Final Score: " + score, canvas.width/2-40, canvas.height/2-10);
 
 }
 function mouseMoved(event){
