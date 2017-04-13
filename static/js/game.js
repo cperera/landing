@@ -4,8 +4,8 @@ var spaceships = [];
 var bullets = [];
 var EXPL = 4;
 
-var ammo = 10;
-var points = 0;
+var ammo = 0;
+var score = 0;
 var shaking = 0;
 var shipLeft = new Image();
 var shipRight = new Image();
@@ -13,21 +13,28 @@ var shipUp = new Image();
 
 var drawCollisionRects = false;
 
+var ended = false;
+
+var canvas=document.getElementById("can");
 var updateInt;
 var repaintInt;
 
 function startGame(){
     console.log("Game Begins Now!");
-    var canvas=document.getElementById("can");
     canvas.setAttribute("tabIndex",0);
+    canvas.style.cursor = "none";
     repaintInt = setInterval(repaint,30);
     updateInt = setInterval(update,30);
     shipLeft.src="static/images/ship_left.png";
     shipRight.src="static/images/ship_right.png";
     shipUp.src="static/images/ship_up_red.png";
+
+    ammo = 10;
+    ended = false;
+    score = 0;
+    
 }
 function repaint(){
-    var canvas=document.getElementById("can");
     var ctx= canvas.getContext("2d");
 
     // flash white on ship explosion
@@ -93,7 +100,7 @@ function repaint(){
     ctx.font="28px serif";
     ctx.fillText("# of Spaceships: " + spaceships.length, 10,30);
     ctx.fillText("Ammo: " + ammo, 10,60);
-    ctx.fillText("Score: " + points, 10,90);
+    ctx.fillText("Score: " + score, 10,90);
 
 }
 function update(){
@@ -151,7 +158,7 @@ function update(){
                 }
                 spaceships.splice(j,1);
                 bullets.splice(i,1);
-                points += 10
+                score += 10
                 shaking = 1.0
                 break;
             }
@@ -188,20 +195,68 @@ function endgame(){
     clearInterval(updateInt);
     clearInterval(repaintInt);
     console.log("Game over!");
+    ended = true;
     var canvas=document.getElementById("can");
     var ctx= canvas.getContext("2d");
 
-    ctx.fillStyle = "#222222";
-    ctx.fillRect(canvas.width/2-50,canvas.height/2-20,100,60);
+    // Display Final Score
+    ctx.fillStyle = "#282828";
+    ctx.fillRect(canvas.width/2-100, canvas.height/2 - 50, 200, 120);
     ctx.fillStyle = "#FFFFFF";
-    ctx.font="28px serif";
-    ctx.fillText("Final Score: " + score, canvas.width/2-40, canvas.height/2-10);
+    ctx.font="20px serif";
+    ctx.fillText("Final Score:", canvas.width/2 - 50, canvas.height/2 - 10);
+    ctx.fillText("" + score, canvas.width/2 - 50, canvas.height/2 + 15);
+
+    // Restart Button
+    drawResetButton(false);
+
+    // free the cursor!
+    var canvas=document.getElementById("can");
+    canvas.style.cursor = "default";
 
 }
 function mouseMoved(event){
     last_mouse_x = event.clientX;
     last_mouse_y = event.clientY;
+
+    if (ended) {
+        if ((last_mouse_x > canvas.width/2 - 70 && last_mouse_x < canvas.width/2 + 70) && 
+            (last_mouse_y > canvas.height/2 + 30 && last_mouse_y < canvas.height/2 + 60)){
+            drawResetButton(true);   
+        } else {
+            drawResetButton(false);
+        }
+        console.log("MRB");
+    }
 }
+
+function mouseDown(event){
+    console.log(event);
+    if (ended) {
+        if ((last_mouse_x > canvas.width/2 - 70 && last_mouse_x < canvas.width/2 + 70) && 
+            (last_mouse_y > canvas.height/2 + 30 && last_mouse_y < canvas.height/2 + 60)){
+            console.log("Restarted!");
+            startGame();
+        }
+    }
+}
+
+function drawResetButton(mousedOver){
+    var ctx= canvas.getContext("2d");
+    var rectColor = "#555555";
+    var textColor = "#FFFFFF";
+    if (mousedOver){
+        rectColor = "red";
+        textColor = "blue";
+    }
+
+    ctx.fillStyle = rectColor;
+    ctx.fillRect(canvas.width/2-70, canvas.height/2 + 30, 140, 30);
+    ctx.fillStyle = textColor;
+    ctx.font="18px serif";
+    ctx.fillText("Restart Game", canvas.width/2 - 50, canvas.height/2 + 50);
+}
+
 function keyPress(event){
     if (event.code === "Space"){
         if (ammo >= 1){
