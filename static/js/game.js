@@ -11,6 +11,8 @@ var shipLeft = new Image();
 var shipRight = new Image();
 var shipUp = new Image();
 
+var drawCollisionRects = false;
+
 function startGame(){
     console.log("Game Begins Now!");
     var canvas=document.getElementById("can");
@@ -38,21 +40,24 @@ function repaint(){
     var translation_y = (Math.random()*50 - 25)*shaking;
     ctx.translate(translation_x,translation_y);
 
-    var rotation_ang = (Math.random()*Math.PI/4 - Math.PI/8)*shaking*0.5;
+    var rotation_ang = 0; //(Math.random()*Math.PI/4 - Math.PI/8)*shaking*0.5;
     ctx.translate(canvas.width/2,canvas.height/2);
     ctx.rotate(rotation_ang);
     ctx.translate(-canvas.width/2,-canvas.height/2);
 
     // clear the sceen
     ctx.fillStyle = "#000000";
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     // draw the enemies
     ctx.fillStyle = "#FF0000";
     for (var i = spaceships.length - 1; i >= 0; i--) {
-        //ctx.fillRect(spaceships[i][0],spaceships[i][1],40,40);
+        if (drawCollisionRects) {
+            ctx.strokeRect(spaceships[i][0],spaceships[i][1],40,40);
+        }
         if (spaceships[i][2]>0){
-            ctx.drawImage(shipRight,spaceships[i][0]-5,spaceships[i][1]-10,60,60);
+            ctx.drawImage(shipRight,spaceships[i][0]-15,spaceships[i][1]-10,60,60);
         }
         else{
             ctx.drawImage(shipLeft,spaceships[i][0]-5,spaceships[i][1]-10,60,60);
@@ -67,8 +72,11 @@ function repaint(){
 
     // draw the hero
     ctx.fillStyle = "#0000FF";
-    // ctx.fillRect(last_mouse_x - 10,last_mouse_y - 10,20,20);
-    ctx.drawImage(shipUp, last_mouse_x - 30,last_mouse_y - 10, 60, 60);
+    ctx.drawImage(shipUp, last_mouse_x - 30,last_mouse_y - 30, 60, 60);
+    ctx.strokeStyle = "#FFFFFF";
+    if (drawCollisionRects) {
+        ctx.strokeRect(last_mouse_x - 20,last_mouse_y - 20,40,40);
+    }
 
     // unshake
     ctx.translate(canvas.width/2,canvas.height/2);
@@ -145,7 +153,31 @@ function update(){
                 break;
             }
         }
+
+        // check for collision with the hero
+        if (bullets[i][0]+10 > last_mouse_x - 30 &&
+            bullets[i][0] < last_mouse_x + 30 &&
+            bullets[i][1]+10 > last_mouse_y &&
+            bullets[i][1] < last_mouse_y + 30)
+        {
+            bullets.splice(i, 1);
+            shaking = 1.0;
+        }
     }
+
+    // check each ship against the hero
+    for (var j = spaceships.length - 1; j >= 0; j--) {
+        if (last_mouse_x + 20 > spaceships[j][0] &&
+            last_mouse_x - 20 < spaceships[j][0] + 40 &&
+            last_mouse_y + 20 > spaceships[j][1] &&
+            last_mouse_y - 20 < spaceships[j][1] + 40)
+        {
+            spaceships.splice(j, 1);
+            shaking = 1.0;
+        }
+    }
+
+
 }
 function mouseMoved(event){
     last_mouse_x = event.clientX;
@@ -153,7 +185,6 @@ function mouseMoved(event){
 }
 function keyPress(event){
     if (event.code === "Space"){
-        // console.log('SPAAACE')
         if (ammo >= 1){
             bullets.push([last_mouse_x-5, last_mouse_y -10, 0, -4]);
             ammo -= 1;
