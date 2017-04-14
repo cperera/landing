@@ -33,6 +33,7 @@ function startGame(){
     ended = false;
     score = 0;
     spaceships = [];
+    bullets = [];
     
 }
 function repaint(){
