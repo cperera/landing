@@ -1,5 +1,9 @@
 #! /bin/bash
 for filename in *; do
+	if [[ $filename =~ cv_([0-9-]*).pdf ]]
+	then
+		cp $filename ../pdfs/chrisantha.pdf
+	fi
 	if [[ $filename =~ cv_([0-9-]*).* ]]
 	then
 		match=${BASH_REMATCH[1]}
